@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Hub</title>
+
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1>My Work Hub</h1>
+        </div>
+        <nav class="calendar-nav">
+            <a href="#" id="navGeneral" class="active-nav">General</a>
+            <a href="#" id="navPersonal">Personal</a>
+        </nav>
+        <nav class="auth-nav">
+            <button id="logoutButton">Log Out</button>
+        </nav>
+    </header>
+
+    <main>
+        <div id="calendar"></div>
+    </main>
+
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            
+            <div class="modal-nav">
+                <a href="#" id="navCreateEvent" class="active-nav">Create Event</a>
+                <a href="#" id="navCreateTask">Create Task</a>
+            </div>
+
+            <form id="eventForm">
+                <label for="calendarType">Calendar:</label>
+                <select id="calendarType">
+                    <option value="general">General</option>
+                    <option value="personal">Personal</option>
+                </select>
+
+                <label for="eventTitle">Title:</label>
+                <input type="text" id="eventTitle" required>
+
+                <label for="eventStart">Start Time:</label>
+                <input type="datetime-local" id="eventStart" required>
+
+                <label for="eventEnd">End Time:</label>
+                <input type="datetime-local" id="eventEnd" required>
+
+                <label for="eventPlace">Place:</label>
+                <input type="text" id="eventPlace">
+
+                <label for="eventNotes">Notes:</label>
+                <textarea id="eventNotes"></textarea>
+
+                <button type="submit">Save Event</button>
+            </form>
+
+            <form id="taskForm" class="hidden">
+                <label for="taskAssignee">To Employee:</label>
+                <select id="taskAssignee" required>
+                    </select>
+
+                <label for="taskTitle">Task:</label>
+                <textarea id="taskTitle" required></textarea>
+
+                <label for="taskDueDate">Deadline:</label>
+                <input type="datetime-local" id="taskDueDate" required>
+
+                <label for="taskStatus">Status:</label>
+                <select id="taskStatus">
+                    <option value="To-Do">To-Do</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Done">Done</option>
+                </select>
+
+                <button type="submit">Save Task</button>
+            </form>
+
+        </div>
+    </div>
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span id="detailsCloseButton" class="close-button">&times;</span>
+            <h2 id="detailsTitle">Event Details</h2>
+            
+            <p><strong>Starts:</strong> <span id="detailsStart"></span></p>
+            <p><strong>Ends:</strong> <span id="detailsEnd"></span></p>
+            <p><strong>Place:</strong> <span id="detailsPlace"></span></p>
+            <p><strong>Notes:</strong> <span id="detailsNotes"></span></p>
+            
+            <button id="deleteButton">Delete Event</button>
+        </div>
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', path='/script.js') }}"></script>
+
+</body>
+</html>

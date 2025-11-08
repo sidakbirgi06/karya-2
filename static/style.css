@@ -1,0 +1,227 @@
+/* static/style.css */
+
+/* Basic body styling */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem 2rem;
+}
+
+header h1 {
+    margin: 0;
+}
+
+main {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* --- Modal (Pop-up) Styles --- */
+
+/* 1. The full-screen background "shadow" */
+/* It's hidden by default (display: none) */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* 2. The pop-up box itself */
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+/* 3. The "X" close button */
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* --- Form Styles --- */
+#eventForm label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#eventForm input[type="text"],
+#eventForm input[type="datetime-local"],
+#eventForm textarea {
+    width: 95%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#eventForm button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+#eventForm button:hover {
+    background-color: #0056b3;
+}
+
+/* static/style.css */
+
+/* --- NEW: Header Navigation Styling --- */
+
+/* This targets the <nav> element in all our headers */
+.auth-nav {
+    float: right;
+    /* This moves it to the top-right corner */
+    position: relative;
+    top: -38px; /* Adjust this value to align it vertically */
+}
+
+/* This styles the links on the login/signup pages */
+.auth-nav a {
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+.auth-nav a:hover {
+    background-color: #f4f4f4;
+}
+
+/* This styles our new "Log Out" button */
+#logoutButton {
+    font-size: 16px;
+    color: #dc3545; /* Red color */
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+#logoutButton:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+
+
+
+/* static/style.css */
+
+/* --- NEW: Updated Header Layout --- */
+
+/* This turns the header into a flexible box */
+header {
+    display: flex;
+    justify-content: space-between; /* Spaces items out */
+    align-items: center; /* Vertically aligns items */
+    padding: 1rem 2rem;
+    background-color: #fff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Make sure the h1 doesn't have extra margins */
+header h1 {
+    margin: 0;
+}
+
+/* This is the new center navigation */
+.calendar-nav {
+    display: flex;
+    gap: 10px; /* Adds space between the links */
+}
+
+.calendar-nav a {
+    text-decoration: none;
+    color: #555;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.calendar-nav a:hover {
+    background-color: #f4f4f4;
+}
+
+/* This is the style for the "active" link */
+.calendar-nav a.active-nav {
+    color: #007bff;
+    background-color: #e7f3ff;
+}
+
+/* This cleans up the old "auth-nav" styling */
+.auth-nav {
+    /* Remove the old positioning hacks */
+    float: none;
+    position: static;
+    top: auto;
+}
+
+
+
+
+/* static/style.css */
+
+/* --- NEW: Modal Navigation Toggle --- */
+
+.modal-nav {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.modal-nav a {
+    text-decoration: none;
+    color: #555;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-bottom: 3px solid transparent;
+}
+
+.modal-nav a.active-nav {
+    color: #007bff;
+    border-bottom: 3px solid #007bff;
+}
+
+/* This is the class we added to hide the task form */
+.hidden {
+    display: none;
+}

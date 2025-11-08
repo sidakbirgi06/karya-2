@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Work Hub</title>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/login.css') }}" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Work Hub</h1>
+        <nav class="auth-nav">
+            <a href="/login">Log In</a>
+        </nav>
+    </header>
+
+    <div class="login-container">
+        
+        <div class="form-box">
+            <form id="signupForm">
+                <h2>Sign Up</h2>
+                
+                <label for="signupEmail">Email:</label>
+                <input type="email" id="signupEmail" required>
+
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" required>
+                
+                <label>Sign up as:</label>
+                <div class="role-options">
+                    <input type="radio" id="roleOwner" name="role" value="owner" checked>
+                    <label for="roleOwner">Owner</label>
+                    
+                    <input type="radio" id="roleEmployee" name="role" value="employee">
+                    <label for="roleEmployee">Employee</label>
+                </div>
+
+                <div id="ownerFields">
+                    <label for="companyName">Company Name:</label>
+                    <input type="text" id="companyName">
+                </div>
+
+                <div id="employeeFields" class="hidden">
+                    <label for="companyCode">Company Code:</label>
+                    <input type="text" id="companyCode">
+                </div>
+                <button type="submit">Sign Up</button>
+                <p id="signupMessage" class="message"></p>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', path='/login.js') }}"></script>
+</body>
+</html>

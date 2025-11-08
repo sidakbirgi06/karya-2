@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Work Hub</title>
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/login.css') }}" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Work Hub</h1>
+        <nav class="auth-nav">
+            <a href="/signup">Sign Up</a>
+        </nav>
+    </header>
+
+    <div class="login-container">
+        
+        <div class="form-box">
+            <form id="loginForm">
+                <h2>Login</h2>
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" required>
+
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" required>
+                
+                <button type="submit">Login</button>
+                <p id="loginMessage" class="message"></p>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', path='/login.js') }}"></script>
+</body>
+</html>
