@@ -7,11 +7,12 @@ from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-import models
-import database
+from core import models
+from core import database
 
 # --- NEW: Import our routers ---
-from routers import users, events, tasks
+from Calendar_app.routers import users, events, tasks
+from Finance_app.routers import finance
 
 # --- Database & App Setup ---
 # This line creates our tables (app.db) if they don't exist
@@ -40,12 +41,15 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(events.router)
 app.include_router(tasks.router)
+app.include_router(finance.router)
 
 
 # --- Static & Template Setup (Unchanged) ---
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="Calendar_app/static"), name="static")
+templates = Jinja2Templates(directory="Calendar_app/templates")
 
+app.mount("/finance_static", StaticFiles(directory="Finance_app/static"), name="static_finance")
+templates_finance = Jinja2Templates(directory="Finance_app/templates")
 
 # --- Page Serving Endpoints (Unchanged) ---
 # These are the only endpoints left in main.py
@@ -61,3 +65,12 @@ def serve_login_page(request: Request):
 @app.get("/")
 def serve_home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/finance")
+def serve_finance_page(request: Request):
+    # We use the NEW "templates_finance" variable here
+    return templates_finance.TemplateResponse("finance.html", {"request": request})
+
+@app.get("/finance/summary")
+def serve_summary_page(request: Request):
+    return templates_finance.TemplateResponse("summary.html", {"request": request})

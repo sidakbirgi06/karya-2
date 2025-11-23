@@ -5,7 +5,7 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-import models, schemas, database, auth
+from core import models, schemas as schemas, database, auth
 
 # --- 2. The "Policeman" ---
 # We move this here from main.py because get_current_user needs it

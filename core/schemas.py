@@ -1,5 +1,5 @@
 # schemas.py
-from models import TaskStatus
+from .models import TaskStatus
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, List # Optional is for fields that can be empty (nullable)
@@ -94,3 +94,45 @@ class Token(BaseModel):
 class CalendarFeed(BaseModel):
     events: List[Event]
     tasks: List[Task]
+
+
+class TransactionBase(BaseModel):
+    amount: float
+    type: str # "income" or "expense"
+    category: str
+    date: datetime
+    notes: Optional[str] = None
+
+# 2. Create Schema (What the form sends us)
+class TransactionCreate(TransactionBase):
+    pass 
+
+# 3. Reading Schema (What we send back, including IDs)
+class Transaction(TransactionBase):
+    id: int
+    user_id: int
+    company_id: int
+    
+    class Config:
+        from_attributes = True
+
+# 4. Dashboard Schema (The calculated totals)
+class DashboardData(BaseModel):
+    total_income: float
+    total_expense: float
+    balance: float
+
+
+
+class CategoryStat(BaseModel):
+    category: str
+    total: float
+
+# The complete report for the date range
+class SummaryReport(BaseModel):
+    total_income: float
+    total_expense: float
+    balance: float
+    # A list of category stats for our charts
+    expense_by_category: List[CategoryStat]
+    income_by_category: List[CategoryStat]

@@ -3,8 +3,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-import models, schemas, auth
-from dependencies import get_db, get_current_user # Our toolbox
+from core import models, schemas as schemas, auth
+from core.dependencies import get_db, get_current_user # Our toolbox
 
 router = APIRouter(
     tags=["Calendar Events"] # Group for API docs

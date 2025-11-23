@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
-import models, schemas, auth
-from dependencies import get_db, get_current_user # Our new toolbox
+from core import models, schemas as schemas, auth
+from core.dependencies import get_db, get_current_user # Our new toolbox
 
 # This is the "router" variable that main.py is looking for
 router = APIRouter(

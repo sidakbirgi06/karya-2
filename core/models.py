@@ -1,8 +1,8 @@
 # models.py
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Numeric
 from sqlalchemy.orm import relationship
-from database import Base
+from core.database import Base
 import enum
 
 # --- NEW: Status Enum ---
@@ -94,3 +94,26 @@ class Event(Base):
     company = relationship("Company") # You can add back_populates="events" if you update the Company model
     
     owner = relationship("User", back_populates="events")
+
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # We use Numeric(10, 2) for money. 
+    # This means 10 digits total, with 2 digits after the decimal (e.g., 12345678.99)
+    amount = Column(Numeric(10, 2), nullable=False) 
+    
+    type = Column(String, nullable=False) # "income" or "expense"
+    category = Column(String, nullable=False) # e.g., "Food", "Salary"
+    date = Column(DateTime, nullable=False)
+    notes = Column(String, nullable=True)
+    
+    # --- Relationships ---
+    # We link every transaction to a Company AND a User
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    
+    owner = relationship("User")
+    company = relationship("Company")

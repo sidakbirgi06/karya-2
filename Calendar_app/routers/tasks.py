@@ -3,8 +3,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-import models, schemas, auth
-from dependencies import get_db, get_current_user
+from core import models, schemas as schemas, auth
+from core.dependencies import get_db, get_current_user
 
 router = APIRouter(
     prefix="/api/tasks", # This adds "/api/tasks" to all paths

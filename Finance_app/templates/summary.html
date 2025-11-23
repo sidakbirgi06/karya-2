@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Report</title>
+    
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static_finance', path='/summary.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1>Financial Report</h1>
+        </div>
+        <nav class="calendar-nav">
+            <a href="/finance">&larr; Back to Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="report-container">
+        
+        <div class="report-header">
+            <h2>Summary Report</h2>
+            <p id="dateRangeDisplay">Loading dates...</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box income">
+                <h3>Total Income</h3>
+                <p id="sumIncome">₹0.00</p>
+            </div>
+            <div class="stat-box expense">
+                <h3>Total Expense</h3>
+                <p id="sumExpense">₹0.00</p>
+            </div>
+            <div class="stat-box balance">
+                <h3>Net Balance</h3>
+                <p id="sumBalance">₹0.00</p>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <div class="chart-box">
+                <h3>Expense Breakdown</h3>
+                <canvas id="expenseChart"></canvas>
+            </div>
+            
+            <div class="details-box">
+                <h3>Category Details</h3>
+                <ul id="categoryList" class="category-list">
+                    </ul>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static_finance', path='/summary.js') }}"></script>
+</body>
+</html>

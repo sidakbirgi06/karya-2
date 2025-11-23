@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker - Work Hub</title>
+    
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static_finance', path='/finance.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1>Finance Tracker</h1>
+        </div>
+        <nav class="calendar-nav">
+            <a href="/">Calendar</a> <a href="/finance" class="active-nav">Finance</a>
+        </nav>
+        <nav class="auth-nav">
+            <button id="logoutButton">Log Out</button>
+        </nav>
+    </header>
+
+    <main>
+        <div id="dashboardContainer" class="dashboard-grid">
+            <div class="card income-card">
+                <h3>Income</h3>
+                <p id="totalIncome">₹0.00</p>
+            </div>
+            <div class="card expense-card">
+                <h3>Expense</h3>
+                <p id="totalExpense">₹0.00</p>
+            </div>
+            <div class="card balance-card">
+                <h3>Balance</h3>
+                <p id="totalBalance">₹0.00</p>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button id="addIncomeBtn" class="btn-add btn-income">+ Add Income</button>
+            <button id="addExpenseBtn" class="btn-add btn-expense">+ Add Expense</button>
+            <button id="viewSummaryBtn" class="btn-add btn-summary">📊 View Summary</button>
+        </div>
+
+        <div class="transactions-section">
+            <h2>Recent Transactions <span id="todaysDate"></span></h2>
+            <div class="filter-container">
+                <button class="filter-btn active" onclick="filterTransactions('all')">All</button>
+                <button class="filter-btn" onclick="filterTransactions('income')">Income</button>
+                <button class="filter-btn" onclick="filterTransactions('expense')">Expense</button>
+            </div>
+            <div id="transactionList" class="transaction-list">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="transactionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modalTitle">Add Transaction</h2>
+            
+            <form id="transactionForm">
+                <input type="hidden" id="transType">
+
+                <label for="transAmount">Amount (₹):</label>
+                <input type="number" id="transAmount" step="0.01" required>
+
+                <label for="transCategory">Category:</label>
+                <select id="transCategory" required>
+                    </select>
+
+                <label for="transDate">Date:</label>
+                <input type="datetime-local" id="transDate" required>
+
+                <label for="transNotes">Notes (Optional):</label>
+                <textarea id="transNotes"></textarea>
+
+                <button type="submit">Save Transaction</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="summaryModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-button" id="closeSummaryModal">&times;</span>
+            <h2>Select Date Range</h2>
+        
+            <form id="summaryForm">
+                <div class="date-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-generate">Generate Report</button>
+            </form>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static_finance', path='/finance.js') }}"></script>
+</body>
+</html>
