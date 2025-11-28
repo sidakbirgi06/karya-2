@@ -1,17 +1,19 @@
 // Finance_app/static/finance.js
 
 document.addEventListener('DOMContentLoaded', function() {
-    // --- 1. AUTH CHECK ---
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-        window.location.href = '/login';
-        return;
-    }
+    // --- 1. AUTH CHECK & SETUP ---
+    // Browser handles cookies automatically
+    const api = axios.create();
 
-    // Setup Axios with the token
-    const api = axios.create({
-        headers: { 'Authorization': 'Bearer ' + token }
-    });
+    api.interceptors.response.use(
+        response => response,
+        error => {
+            if (error.response && error.response.status === 401) {
+                window.location.href = '/login';
+            }
+            return Promise.reject(error);
+        }
+    );
 
     // --- SET CURRENT DATE HEADER ---
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -222,15 +224,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    // --- 5. LOGOUT LOGIC ---
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.onclick = function() {
-            // 1. Remove the key
-            localStorage.removeItem('access_token');
-            // 2. Kick them out
-            window.location.href = '/login';
-        };
+    // Logout Button
+    logoutButton.onclick = function() { 
+        api.post('/logout')
+            .then(() => { window.location.href = '/login'; })
+            .catch(() => { window.location.href = '/login'; });
     }
 
 

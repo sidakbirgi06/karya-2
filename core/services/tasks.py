@@ -1,17 +1,8 @@
-# routers/tasks.py
+# core/services/tasks.py
 
-from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
-from core import models, schemas as schemas, auth
-from core.dependencies import get_db, get_current_user
-from core.services import tasks as task_service
-
-router = APIRouter(
-    prefix="/api/tasks",
-    tags=["Tasks"]
-)
-
+from fastapi import HTTPException
+from core import models, schemas
 
 # --- 1. CREATE TASK ---
 def create_new_task(task: schemas.TaskCreate, user: models.User, db: Session):
@@ -60,7 +51,7 @@ def update_task_status(task_id: int, status: schemas.TaskStatus, user: models.Us
     db.refresh(task)
     return task
 
-# --- 3. GET TASKS (This is the one you were likely missing) ---
+# --- 3. GET TASKS (For the Feed) ---
 def get_user_tasks(user: models.User, db: Session):
     """Fetches tasks based on whether the user is an Owner or Employee"""
     if user.role == "owner":

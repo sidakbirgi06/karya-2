@@ -82,38 +82,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const loginMessage = document.getElementById('loginMessage');
 
-    // --- NEW: Check if the login form exists on this page ---
     if (loginForm) {
         loginForm.onsubmit = function(event) {
-            event.preventDefault(); // Stop the form from reloading the page
+            event.preventDefault(); 
 
-            // Get values from the form
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
-            // CRITICAL: Our backend /login route expects "form data", not JSON.
             const formData = new URLSearchParams();
-            formData.append('username', email); // It expects "username", which is our email
+            formData.append('username', email); 
             formData.append('password', password);
 
-            // Send the form data to our backend /login endpoint
             axios.post('/login', formData)
             .then(function(response) {
-                // If successful, we get a token back
-                const token = response.data.access_token;
-                
-                // 1. Save the token to the browser's "digital wallet"
-                localStorage.setItem('access_token', token);
-
-                // 2. Redirect the user to the main calendar page
+                // SUCCESS! 
+                // We do NOT need to save the token. The browser has the cookie now.
                 window.location.href = '/'; 
             })
             .catch(function(error) {
-                // If login fails (wrong email/password)
                 loginMessage.style.color = 'red';
                 loginMessage.textContent = 'Incorrect email or password.';
             });
         };
-    } // --- End of new "if" block ---
+    }
 
 });

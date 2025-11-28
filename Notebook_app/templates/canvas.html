@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook - Work Hub</title>
+    
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/notebook.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="/notebooks" class="back-link">&larr; Back</a>
+            <h1 id="notebookTitle">Loading...</h1>
+        </div>
+        <nav class="calendar-nav">
+            <a href="/">Calendar</a>
+            <a href="/finance">Finance</a>
+            <a href="/notebooks" class="active-nav">Notebooks</a>
+        </nav>
+        <nav class="auth-nav">
+            <button id="logoutButton">Log Out</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="canvas-actions">
+            <div class="search-box">
+                <input type="text" id="searchNotes" placeholder="Search notes...">
+            </div>
+            <div class="create-buttons">
+                <button id="addTextBtn" class="btn-tool" title="Text Note">📝 Text</button>
+                <button id="addChecklistBtn" class="btn-tool" title="Checklist">✅ List</button>
+            </div>
+        </div>
+
+        <div id="masonryGrid" class="masonry-grid">
+            </div>
+    </main>
+
+    <div id="textModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Note Details</h2>
+                <div class="modal-actions">
+                    <button type="button" id="editTextBtn" class="btn-icon" title="Edit Note">✎</button>
+                    <span class="close-button close-text">&times;</span>
+                </div>
+            </div>
+            
+            <form id="textForm">
+                <input type="text" id="textTitle" placeholder="Title" class="note-input-title" disabled>
+                <textarea id="textContent" placeholder="Content..." class="note-input-body" disabled></textarea>
+                
+                <div class="modal-footer">
+                    <button type="submit" id="saveTextBtn" class="btn-primary hidden">Save Note</button>
+                </div>
+            </form>
+        </div>
+    </div> <div id="listModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Checklist</h2>
+                <div class="modal-actions">
+                    <button type="button" id="editListBtn" class="btn-icon" title="Edit List">✎</button>
+                    <span class="close-button close-list">&times;</span>
+                </div>
+            </div>
+
+            <form id="listForm">
+                <input type="text" id="listTitle" placeholder="List Title" class="note-input-title" disabled>
+                
+                <p class="hint hidden" id="listHint">Enter items separated by new lines:</p>
+                
+                <textarea id="listContent" placeholder="List Items..." class="note-input-body" disabled></textarea>
+                
+                <div class="modal-footer">
+                    <button type="submit" id="saveListBtn" class="btn-primary hidden">Save List</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <input type="hidden" id="notebookId" value="{{ notebook_id }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', path='/js/canvas.js') }}"></script>
+
+</body>
+</html>

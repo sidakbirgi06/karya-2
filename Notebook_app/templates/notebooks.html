@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebooks - Work Hub</title>
+    
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/notebook.css') }}" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1>Knowledge Base</h1>
+        </div>
+        <nav class="calendar-nav">
+            <a href="/">Calendar</a>
+            <a href="/finance">Finance</a>
+            <a href="/notebooks" class="active-nav">Notebooks</a>
+        </nav>
+        <nav class="auth-nav">
+            <button id="logoutButton">Log Out</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="notebook-actions">
+            <h2>My Bookshelf</h2>
+            <button id="createNotebookBtn" class="btn-primary">+ New Notebook</button>
+        </div>
+
+        <div id="bookshelfGrid" class="bookshelf-grid">
+            <p class="loading-text">Loading your notebooks...</p>
+        </div>
+    </main>
+
+    <div id="notebookModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Create New Notebook</h2>
+            <form id="notebookForm">
+                <label for="notebookName">Name:</label>
+                <input type="text" id="notebookName" required placeholder="e.g., Marketing Ideas">
+                
+                <label>Cover Style:</label>
+                <div class="color-options">
+                    <div class="color-circle" style="background: #3498db;" data-color="blue"></div>
+                    <div class="color-circle" style="background: #e74c3c;" data-color="red"></div>
+                    <div class="color-circle" style="background: #2ecc71;" data-color="green"></div>
+                    <div class="color-circle" style="background: #f1c40f;" data-color="yellow"></div>
+                    <div class="color-circle" style="background: #9b59b6;" data-color="purple"></div>
+                    <div class="color-circle" style="background: #34495e;" data-color="dark"></div>
+                </div>
+                <input type="hidden" id="notebookCover" value="blue">
+
+                <button type="submit">Create Notebook</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', path='/js/notebook.js') }}"></script>
+
+</body>
+</html>

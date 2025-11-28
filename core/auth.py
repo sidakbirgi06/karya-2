@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 import string
 import secrets
+from core.config import settings
 
 import os
 
@@ -24,45 +25,31 @@ def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-# --- 2. JWT (TOKEN) CREATION & VALIDATION ---
-
-# A secret key to sign our tokens.
-# IMPORTANT: In a real app, this MUST be a complex, random string
-# and should NOT be written directly in the code.
-# You would load it from an environment variable.
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise ValueError("No SECRET_KEY set in .env file")
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30 # A token will last for 30 minutes
+# --- 2. JWT (TOKEN) CREATION & VALIDATION (UPDATED) ---
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    """Creates a new JWT access token."""
     to_encode = data.copy()
+    
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        # Give it a default expiration time
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        # Use the variable from settings
+        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    
+    # Use Secret and Algorithm from settings
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
-# We won't need this in Step 1, but we'll need it later to verify 
-# the token on our calendar page.
 def verify_access_token(token: str):
-    """Checks a token's validity and returns the payload (data)."""
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        # Use Secret and Algorithm from settings
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         return payload
     except JWTError:
-        return None # Token is invalid or expired
-
+        return None
 
 def generate_company_code(length: int = 6):
-    """Generates a random, 6-character, uppercase alphanumeric code."""
-    # Create a pool of characters (e.g., ABCDE...12345)
     alphabet = string.ascii_uppercase + string.digits
-    # Pick 6 random characters from the pool
     return ''.join(secrets.choice(alphabet) for i in range(length))

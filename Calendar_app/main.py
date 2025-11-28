@@ -1,7 +1,5 @@
 # main.py
 
-from dotenv import load_dotenv  # <-- ADD THIS
-load_dotenv()
 
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
@@ -13,6 +11,7 @@ from core import database
 # --- NEW: Import our routers ---
 from Calendar_app.routers import users, events, tasks
 from Finance_app.routers import finance
+from Notebook_app.routers import notebooks
 
 # --- Database & App Setup ---
 # This line creates our tables (app.db) if they don't exist
@@ -36,20 +35,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- NEW: Include the Routers ---
+
 # This is where we "plug in" our "mini-brains"
 app.include_router(users.router)
 app.include_router(events.router)
 app.include_router(tasks.router)
 app.include_router(finance.router)
+app.include_router(notebooks.router)
 
 
-# --- Static & Template Setup (Unchanged) ---
-app.mount("/static", StaticFiles(directory="Calendar_app/static"), name="static")
+# --- Static & Template Setup ---
+
+# 1. Mount the single global static folder
+# Note: directory="../static" means "go up one level to find the static folder"
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# 2. Templates (Unchanged)
 templates = Jinja2Templates(directory="Calendar_app/templates")
-
-app.mount("/finance_static", StaticFiles(directory="Finance_app/static"), name="static_finance")
 templates_finance = Jinja2Templates(directory="Finance_app/templates")
+templates_notebook = Jinja2Templates(directory="Notebook_app/templates")
 
 # --- Page Serving Endpoints (Unchanged) ---
 # These are the only endpoints left in main.py
@@ -74,3 +78,18 @@ def serve_finance_page(request: Request):
 @app.get("/finance/summary")
 def serve_summary_page(request: Request):
     return templates_finance.TemplateResponse("summary.html", {"request": request})
+
+
+@app.get("/notebooks")
+def serve_notebooks_page(request: Request):
+    # This uses the 'templates_notebook' variable we defined earlier
+    return templates_notebook.TemplateResponse("notebooks.html", {"request": request})
+
+
+@app.get("/notebooks/{notebook_id}")
+def serve_notebook_canvas(notebook_id: int, request: Request):
+    # We pass the 'notebook_id' to the HTML so JavaScript can use it
+    return templates_notebook.TemplateResponse("canvas.html", {
+        "request": request, 
+        "notebook_id": notebook_id
+    })

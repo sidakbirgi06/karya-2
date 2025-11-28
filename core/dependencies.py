@@ -2,7 +2,7 @@
 
 # --- 1. Imports ---
 # We need to import all the tools our functions will use
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request 
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from core import models, schemas as schemas, database, auth
@@ -11,7 +11,7 @@ from core import models, schemas as schemas, database, auth
 # We move this here from main.py because get_current_user needs it
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login") 
 
-# --- 3. The "Database Key" Helper ---
+# --- 1. Database Helper (Unchanged) ---
 def get_db():
     db = database.SessionLocal()
     try:
@@ -19,11 +19,19 @@ def get_db():
     finally:
         db.close()
 
-# --- 4. The "Locksmith" Helper ---
+# --- 2. The "Locksmith" Helper (UPDATED) ---
 def get_current_user(
-    token: str = Depends(oauth2_scheme), 
+    request: Request,  # We need the Request object to get cookies
     db: Session = Depends(get_db)
 ):
+    # 1. Try to get the token from the "access_token" cookie
+    token = request.cookies.get("access_token")
+    
+    if not token:
+        # If no cookie, throw them out
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    # 2. Verify the token (Same logic as before)
     payload = auth.verify_access_token(token)
     if payload is None:
         raise HTTPException(status_code=401, detail="Invalid token")

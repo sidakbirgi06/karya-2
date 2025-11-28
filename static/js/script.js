@@ -3,36 +3,37 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- 1. BOUNCER & ROLE CHECK ---
-    const token = localStorage.getItem('access_token');
     let userRole = null;
-    let employeeList = []; // This will hold our list of employees
+    let employeeList = [];
 
-    // Helper function to decode the token
-    function decodeJwt(token) {
-        try {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-            return JSON.parse(jsonPayload);
-        } catch (e) {
-            console.error("Failed to decode token", e);
-            return null;
+    // --- MOVE THIS UP HERE (So 'api' exists before we use it) ---
+    const api = axios.create();
+
+    // Interceptor to kick us out if cookie is invalid
+    api.interceptors.response.use(
+        response => response,
+        error => {
+            if (error.response && error.response.status === 401) {
+                window.location.href = '/login';
+            }
+            return Promise.reject(error);
         }
-    }
+    );
 
-    if (!token) {
-        window.location.href = '/signup';
-        return;
-    }
-    const decodedToken = decodeJwt(token);
-    if (!decodedToken) {
-        localStorage.removeItem('access_token');
-        window.location.href = '/signup';
-        return;
-    }
-    userRole = decodedToken.role;
+    // NOW we can safely use 'api'
+    api.get('/api/me')
+        .then(res => {
+            userRole = res.data.role;
+            console.log("Logged in as:", userRole);
+            
+            // If we are an owner, fetch employees immediately
+            if (userRole === 'owner') {
+                fetchEmployees();
+            }
+        })
+        .catch(err => {
+            console.error("Not logged in or API error", err);
+        });
 
     // --- 2. GLOBAL STATE ---
     let currentView = 'general'; // 'general' or 'personal'
@@ -73,12 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var navPersonal = document.getElementById('navPersonal');
     var logoutButton = document.getElementById('logoutButton');
 
-    // --- 4. AXIOS SETUP ---
-    const api = axios.create({
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
-    });
 
     // --- 5. HELPER FUNCTIONS ---
     function fetchEmployees() {
@@ -172,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error fetching calendar feed:', error);
                     if (error.response && error.response.status === 401) {
                         localStorage.removeItem('access_token');
-                        window.location.href = '/signup';
                     }
                     failureCallback(error);
                 });
@@ -319,7 +313,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Logout Button
-    logoutButton.onclick = function() { localStorage.removeItem('access_token'); window.location.href = '/signup'; }
+    logoutButton.onclick = function() { 
+        api.post('/logout')
+            .then(() => { window.location.href = '/login'; })
+            .catch(() => { window.location.href = '/login'; });
+    }
 
     // Modal Close Logic
     createModalCloseButton.onclick = function() { createModal.style.display = 'none'; }

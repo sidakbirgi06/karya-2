@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finance Tracker - Work Hub</title>
     
-    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static_finance', path='/finance.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='/css/finance.css') }}" rel="stylesheet">
 </head>
 <body>
 
@@ -15,7 +15,9 @@
             <h1>Finance Tracker</h1>
         </div>
         <nav class="calendar-nav">
-            <a href="/">Calendar</a> <a href="/finance" class="active-nav">Finance</a>
+            <a href="/">Calendar</a>
+            <a href="/finance" class="active-nav">Finance</a>
+            <a href="/notebooks">Notebooks</a>
         </nav>
         <nav class="auth-nav">
             <button id="logoutButton">Log Out</button>
@@ -105,6 +107,6 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="{{ url_for('static_finance', path='/finance.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/finance.js') }}"></script>
 </body>
 </html>

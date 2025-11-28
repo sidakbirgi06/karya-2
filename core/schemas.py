@@ -136,3 +136,52 @@ class SummaryReport(BaseModel):
     # A list of category stats for our charts
     expense_by_category: List[CategoryStat]
     income_by_category: List[CategoryStat]
+
+
+
+
+# --- NOTEBOOK AGENT SCHEMAS ---
+
+# 1. NOTE SCHEMAS (The Cards)
+class NoteBase(BaseModel):
+    title: Optional[str] = None
+    type: str = "text"   # "text", "checklist", "photo"
+    content: Optional[str] = None # Stores text or JSON string
+    color: str = "white"
+
+class NoteCreate(NoteBase):
+    pass # Same fields as Base for creation
+
+class Note(NoteBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    notebook_id: int # Link back to the parent shelf
+
+    class Config:
+        from_attributes = True # Allows reading from ORM model
+
+# 2. NOTEBOOK SCHEMAS (The Shelves)
+class NotebookBase(BaseModel):
+    name: str
+    cover: str = "blue" # Class name or Hex color
+
+class NotebookCreate(NotebookBase):
+    pass 
+
+class Notebook(NotebookBase):
+    id: int
+    company_id: int
+    owner_id: int
+    
+    # This is the magic: It will automatically fetch all notes inside!
+    notes: List[Note] = [] 
+
+    class Config:
+        from_attributes = True
+
+
+
+class NoteUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None

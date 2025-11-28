@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Nume
 from sqlalchemy.orm import relationship
 from core.database import Base
 import enum
+from datetime import datetime
 
 # --- NEW: Status Enum ---
 # This creates a "controlled vocabulary" for our task status
@@ -21,33 +22,27 @@ class Company(Base):
     name = Column(String, nullable=False)
     company_code = Column(String, unique=True, index=True, nullable=False)
     
-    # This links a Company to its list of Users and Tasks
-    users = relationship("User", back_populates="company")
-    tasks = relationship("Task", back_populates="company")
+    users = relationship("User", back_populates="company", cascade="all, delete-orphan")
+    tasks = relationship("Task", back_populates="company", cascade="all, delete-orphan")
 
 
-# --- UPDATED: User Table ---
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    role = Column(String, nullable=False) # "owner" or "employee"
+    role = Column(String, nullable=False) 
 
-    # This is the new "link" to the Company table
     company_id = Column(Integer, ForeignKey("companies.id"))
     
-    # This creates the virtual link for Python
     company = relationship("Company", back_populates="users")
     
-    # Links to a user's *personal* events (no change)
-    events = relationship("Event", back_populates="owner")
+    # --- UPDATED: Personal Events die with the User ---
+    events = relationship("Event", back_populates="owner", cascade="all, delete-orphan")
     
-    # Links to all tasks *assigned* to this user
+    
     assigned_tasks = relationship("Task", back_populates="assignee", foreign_keys="[Task.assignee_id]")
-    
-    # Links to all tasks *created* by this user (if they are an owner)
     created_tasks = relationship("Task", back_populates="task_creator", foreign_keys="[Task.owner_id]")
 
 
@@ -117,3 +112,51 @@ class Transaction(Base):
     
     owner = relationship("User")
     company = relationship("Company")
+
+
+
+
+# --- NOTEBOOK AGENT MODELS ---
+
+class Notebook(Base):
+    __tablename__ = "notebooks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    # The 'cover' will store a CSS class or hex code (e.g., "blue", "#ff0000")
+    cover = Column(String, default="blue") 
+    
+    # Ownership: Belongs to a Company, Created by a User
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
+    # Relationships
+    company = relationship("Company")
+    owner = relationship("User")
+    
+    # Cascade Delete: If you burn the notebook, the notes inside burn too.
+    notes = relationship("Note", back_populates="notebook", cascade="all, delete-orphan")
+
+
+class Note(Base):
+    __tablename__ = "notes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=True)
+    
+    # "type" tells the frontend if it should draw a Text box or a Checklist
+    type = Column(String, default="text") # 'text', 'checklist', 'photo'
+    
+    # This stores the actual data (simple text or JSON string for checklists)
+    content = Column(String, nullable=True)
+    
+    # Visuals
+    color = Column(String, default="white") 
+    
+    # Timestamps (Auto-generated)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Links
+    notebook_id = Column(Integer, ForeignKey("notebooks.id"))
+    notebook = relationship("Notebook", back_populates="notes")

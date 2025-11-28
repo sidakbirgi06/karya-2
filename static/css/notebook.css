@@ -1,0 +1,487 @@
+/* static/css/notebook.css */
+
+/* 1. Action Bar */
+.notebook-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.btn-primary:hover { background-color: #0056b3; }
+
+/* 2. The Bookshelf Grid */
+.bookshelf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+/* 3. The Notebook Item */
+.notebook-item {
+    background-color: white; /* Default fallback */
+    height: 260px;
+    border-radius: 8px 16px 16px 8px; /* Curved right side like a book */
+    box-shadow: 
+        inset 10px 0 20px rgba(0,0,0,0.1), /* Spine shadow */
+        5px 5px 15px rgba(0,0,0,0.15); /* Drop shadow */
+    cursor: pointer;
+    transition: transform 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+.notebook-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        inset 10px 0 20px rgba(0,0,0,0.1),
+        8px 8px 20px rgba(0,0,0,0.25);
+}
+
+/* The "Spine" Design */
+.notebook-item::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(0,0,0,0.1);
+}
+
+.notebook-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    word-wrap: break-word;
+}
+
+/* 4. Color Options (For the Modal) */
+.color-options {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 20px 0;
+}
+.color-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+.color-circle:hover { transform: scale(1.1); }
+.color-circle.selected { border-color: #333; transform: scale(1.1); }
+
+/* 5. Theme Colors (Matches the DB 'cover' field) */
+.notebook-blue   { background: linear-gradient(135deg, #3498db, #2980b9); }
+.notebook-red    { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.notebook-green  { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.notebook-yellow { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+.notebook-purple { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.notebook-dark   { background: linear-gradient(135deg, #34495e, #2c3e50); }
+
+
+
+/* --- CANVAS VIEW (IMPROVED) --- */
+
+/* 1. The Action Bar (Search + Buttons) */
+.canvas-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.search-box {
+    flex-grow: 1; /* Search takes available space */
+    max-width: 400px;
+    position: relative;
+}
+
+#searchNotes {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* Pill shape */
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+#searchNotes:focus { border-color: #007bff; }
+
+.create-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-tool {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Space between icon and text */
+}
+
+.btn-tool:hover {
+    background-color: #e2e6ea;
+    transform: translateY(-1px);
+}
+
+/* 2. The Masonry Grid */
+.masonry-grid {
+    column-count: 4; 
+    column-gap: 25px;
+    padding: 10px 0;
+}
+
+.note-card {
+    background: #fff;
+    break-inside: avoid;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Softer shadow */
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+
+.note-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.note-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: #2c3e50;
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 8px;
+}
+
+.note-body {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #555;
+    white-space: pre-wrap; 
+}
+
+/* Checklist Preview Styling */
+.checklist-item {
+    display: flex;
+    align-items: flex-start; /* Align top for multi-line items */
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+.checklist-item input { margin-top: 4px; margin-right: 8px; }
+
+
+/* --- MODERN NOTE MODALS (Text & List) --- */
+
+/* Reuse the nice styles from the Notebook Modal */
+#textModal .modal-content, 
+#listModal .modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 0; /* Header takes full width */
+    width: 500px;
+    max-width: 95%;
+    border: none;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    overflow: hidden; /* Keeps header corners rounded */
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    padding: 15px 25px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+#textForm, #listForm {
+    padding: 25px;
+}
+
+/* Inputs inside the modal */
+.note-input-title {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    color: #333;
+    margin-bottom: 15px;
+}
+.note-input-title:disabled { background: transparent; }
+
+.note-input-body {
+    width: 100%;
+    min-height: 200px;
+    padding: 10px;
+    font-size: 1rem;
+    line-height: 1.6;
+    border: 1px solid transparent; /* Invisible border by default */
+    outline: none;
+    font-family: inherit;
+    resize: none;
+    color: #555;
+}
+/* When Editing, show a subtle border */
+.note-input-body:enabled {
+    border: 1px dashed #ccc;
+    background: #fafafa;
+    border-radius: 6px;
+}
+
+.hint {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.modal-footer {
+    padding-top: 20px;
+    text-align: right;
+}
+
+/* The Edit (Pencil) Button */
+.btn-icon {
+    background: white;
+    border: 1px solid #ddd;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+.btn-icon:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+
+
+/* --- VIEW vs EDIT MODES --- */
+
+/* 1. Modal Header Layout */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 2. The Edit Button (Pencil) */
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #555;
+    padding: 0;
+    transition: color 0.2s;
+}
+.btn-icon:hover { color: #007bff; }
+
+/* 3. The "Chameleon" Inputs (Read-Only Look) */
+/* When input is DISABLED, remove borders so it looks like text */
+input:disabled, textarea:disabled {
+    background-color: transparent;
+    border: none;
+    color: #333;
+    cursor: default; /* Arrow cursor, not text cursor */
+    resize: none;    /* Can't resize in view mode */
+}
+
+/* When input is ENABLED (Edit Mode), bring back the look */
+input:enabled, textarea:enabled {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc; /* Or your standard border */
+}
+
+/* 4. Utilities */
+.hidden { display: none !important; }
+
+
+/* --- MODERN MODAL STYLING --- */
+
+/* 1. The Modal Box */
+#notebookModal .modal-content {
+    background-color: #ffffff;
+    border-radius: 12px; /* Softer corners */
+    padding: 30px;
+    width: 400px; /* Fixed elegant width */
+    max-width: 90%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); /* Deep shadow for "floating" effect */
+    border: none;
+    position: relative;
+    text-align: center; /* Center everything for a focused look */
+}
+
+/* 2. The Header */
+#notebookModal h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* 3. The Form Labels */
+#notebookModal label {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+/* 4. The Input Field */
+#notebookName {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #eee; /* Subtle border */
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+    outline: none;
+    box-sizing: border-box; /* Prevents padding from breaking width */
+}
+
+#notebookName:focus {
+    border-color: #007bff; /* Blue glow on focus */
+}
+
+/* 5. The Color Picker */
+.color-options {
+    display: flex;
+    justify-content: center; /* Center the dots */
+    gap: 15px; /* More breathing room */
+    margin-bottom: 30px;
+}
+
+.color-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid white; /* Creates a gap effect */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.color-circle:hover {
+    transform: scale(1.15);
+}
+
+/* When selected, give it a ring */
+.color-circle.selected {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 3px #333; /* Dark ring around the selected color */
+}
+
+/* 6. The Create Button */
+#notebookModal button[type="submit"] {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    padding: 14px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+#notebookModal button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#notebookModal button[type="submit"]:active {
+    transform: scale(0.98); /* Tiny click effect */
+}
+
+/* 7. Close Button Adjustments */
+.close-button {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: #aaa;
+    font-size: 24px;
+    transition: color 0.2s;
+}
+.close-button:hover {
+    color: #333;
+}
+
+
+/* --- FIX CLOSE BUTTON IN NOTE MODALS --- */
+
+/* Reset the position so it sits inside the flex header */
+.modal-actions .close-button {
+    position: static; /* Stop floating! */
+    margin-left: 15px; /* Space between pencil and X */
+    font-size: 2rem;   /* Make it nice and big */
+    line-height: 1;    /* Fix vertical alignment */
+    color: #888;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.modal-actions .close-button:hover {
+    color: #333;
+}
